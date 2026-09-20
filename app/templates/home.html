@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-header">
+    <h2>خوش آمدید</h2>
+    <p>سامانه حرفه‌ای محاسبات الگوی خیاطی بر اساس سیستم مولر.</p>
+</section>
+
+<div class="grid">
+    <div class="card">
+        <h3>الگوها</h3>
+        <p>انتخاب و محاسبه الگوهای موجود.</p>
+        <div class="card-actions">
+            {% for p in patterns %}
+            <a class="btn btn-outline" href="{{ url_for('patterns.calculate', code=p.code) }}">
+                محاسبه {{ p.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>مشتری‌ها</h3>
+        <p>مشاهده و مدیریت مشتری‌ها و اندازه‌های ذخیره‌شده.</p>
+        <a class="btn btn-primary" href="{{ url_for('clients.index') }}">مشاهده مشتری‌ها</a>
+    </div>
+</div>
+{% endblock %}
