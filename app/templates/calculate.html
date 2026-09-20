@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}{{ pattern.name }}{% endblock %}
+{% block content %}
+<section class="page-header">
+    <h2>{{ pattern.name }}</h2>
+    <p>{{ pattern.description }}</p>
+</section>
+
+{% if errors %}
+<div class="alert alert-error">
+    <ul>
+        {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<form method="POST" class="form" id="calcForm"
+      data-measurements-url="{{ url_for('patterns.client_measurements', code=pattern.code, client_id=0) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-section">
+        <h3>اطلاعات مشتری</h3>
+        <div class="field">
+            <label for="client_id">مشتری</label>
+            <select name="client_id" id="client_id">
+                <option value="">— انتخاب مشتری —</option>
+                {% for c in clients %}
+                <option value="{{ c.id }}"
+                    {% if selected_client_id and selected_client_id|int == c.id %}selected{% endif %}>
+                    {{ c.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn btn-outline btn-sm" id="newClientBtn">+ مشتری جدید</button>
+            <button type="button" class="btn btn-outline btn-sm" id="loadMeasurementsBtn">استفاده از اندازه‌های ذخیره‌شده</button>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h3>اندازه‌ها</h3>
+        <div class="grid grid-2">
+        {% for m in pattern.measurements %}
+            <div class="field">
+                <label for="{{ m.key }}">{{ m.label }}</label>
+                <input type="number" step="0.1" min="0"
+                       name="{{ m.key }}" id="{{ m.key }}"
+                       value="{{ form_data.get(m.key, '') }}"
+                       data-label="{{ m.label }}" required>
+                <span class="error-msg" data-for="{{ m.key }}"></span>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" name="action" value="calculate" class="btn btn-primary">محاسبه</button>
+        <button type="submit" name="action" value="save" class="btn btn-secondary">ذخیره</button>
+    </div>
+</form>
+
+{% if results %}
+<section class="results">
+    <h3>نتایج محاسبه</h3>
+    <div class="results-table">
+        {% for r in results %}
+        <div class="result-row">
+            <div class="result-name">{{ r.name }}</div>
+            <div class="result-value">{{ r.value }} <span class="unit">{{ r.unit }}</span></div>
+            {% if r.description %}<div class="result-desc">{{ r.description }}</div>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% if saved_calc_id %}
+    <a class="btn btn-primary" href="{{ url_for('pdf.export_calculation', calc_id=saved_calc_id) }}">دانلود PDF</a>
+    {% endif %}
+</section>
+{% endif %}
+
+<div class="modal" id="clientModal">
+    <div class="modal-content">
+        <h3>مشتری جدید</h3>
+        <form id="newClientForm">
+            <div class="field">
+                <label for="new_client_name">نام و نام خانوادگی</label>
+                <input type="text" id="new_client_name" required>
+            </div>
+            <div class="field">
+                <label for="new_client_phone">شماره تماس (اختیاری)</label>
+                <input type="text" id="new_client_phone">
+            </div>
+            <div class="field">
+                <label for="new_client_notes">توضیحات (اختیاری)</label>
+                <textarea id="new_client_notes" rows="3"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">ذخیره</button>
+                <button type="button" class="btn btn-outline" id="cancelClientBtn">انصراف</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
