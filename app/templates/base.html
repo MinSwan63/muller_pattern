@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="{{ session.get('theme', 'light') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}محاسبات الگوی مولر{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header class="app-header">
+    <button class="menu-toggle" id="menuToggle" aria-label="منو">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="header-logo">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}"
+             alt="لوگو"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="logo-fallback">م</div>
+    </div>
+    <h1 class="header-title">سامانه محاسبات الگوی مولر</h1>
+</header>
+
+<aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav">
+        <a href="{{ url_for('main.home') }}" class="nav-link">خانه</a>
+        <a href="{{ url_for('patterns.index') }}" class="nav-link">الگوها</a>
+        <a href="{{ url_for('clients.index') }}" class="nav-link">مشتری‌ها</a>
+        <a href="{{ url_for('settings.index') }}" class="nav-link">تنظیمات</a>
+        <a href="{{ url_for('main.about') }}" class="nav-link">درباره ما</a>
+    </nav>
+</aside>
+<div class="overlay" id="overlay"></div>
+
+<main class="container">
+    {% if session.pop('flash_success', None) %}
+        <div class="alert alert-success">عملیات با موفقیت انجام شد.</div>
+    {% endif %}
+    {% block content %}{% endblock %}
+</main>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
