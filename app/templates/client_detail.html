@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ client.name }}{% endblock %}
+{% block content %}
+<section class="page-header">
+    <h2>{{ client.name }}</h2>
+    {% if client.phone %}<p>تلفن: {{ client.phone }}</p>{% endif %}
+    {% if client.notes %}<p>{{ client.notes }}</p>{% endif %}
+</section>
+
+<div class="card">
+    <h3>ویرایش اطلاعات</h3>
+    <form method="POST" action="{{ url_for('clients.edit', client_id=client.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field"><label>نام</label><input type="text" name="name" value="{{ client.name }}"></div>
+        <div class="field"><label>تلفن</label><input type="text" name="phone" value="{{ client.phone or '' }}"></div>
+        <div class="field"><label>توضیحات</label><textarea name="notes">{{ client.notes or '' }}</textarea></div>
+        <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>محاسبات ذخیره‌شده</h3>
+    {% if client.calculations %}
+    <div class="results-table">
+        {% for calc in client.calculations %}
+        <div class="result-row">
+            <div class="result-name">الگو: {{ calc.pattern }}</div>
+            <div class="result-desc">{{ calc.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+            <a class="btn btn-sm btn-outline" href="{{ url_for('pdf.export_calculation', calc_id=calc.id) }}">PDF</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">محاسبه‌ای برای این مشتری ثبت نشده است.</div>
+    {% endif %}
+</div>
+
+<form method="POST" action="{{ url_for('clients.delete', client_id=client.id) }}"
+      onsubmit="return confirm('آیا از حذف این مشتری مطمئن هستید؟');">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn btn-danger">حذف مشتری</button>
+</form>
+{% endblock %}
