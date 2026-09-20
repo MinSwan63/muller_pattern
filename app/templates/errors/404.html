@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="empty-state">
+    <h2>صفحه یافت نشد</h2>
+    <p>صفحه‌ای که به دنبال آن هستید وجود ندارد.</p>
+    <a class="btn btn-primary" href="{{ url_for('main.home') }}">بازگشت به خانه</a>
+</div>
+{% endblock %}
