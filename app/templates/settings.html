@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}تنظیمات{% endblock %}
+{% block content %}
+<section class="page-header"><h2>تنظیمات</h2></section>
+
+<form method="POST" class="form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-section">
+        <h3>حالت نمایش</h3>
+        <div class="radio-group">
+            <label><input type="radio" name="theme" value="light" {% if theme == 'light' %}checked{% endif %}> روشن</label>
+            <label><input type="radio" name="theme" value="dark" {% if theme == 'dark' %}checked{% endif %}> تاریک</label>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h3>واحد اندازه‌گیری</h3>
+        <div class="radio-group">
+            <label><input type="radio" name="unit" value="cm" {% if unit == 'cm' %}checked{% endif %}> سانتی‌متر</label>
+            <label><input type="radio" name="unit" value="inch" {% if unit == 'inch' %}checked{% endif %}> اینچ</label>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">ذخیره تنظیمات</button>
+</form>
+{% endblock %}
