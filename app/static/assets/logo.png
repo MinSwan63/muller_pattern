@@ -1,0 +1,2 @@
+<img src="..." onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+<div class="logo-fallback">م</div>
